@@ -12,9 +12,6 @@ class CollisionHandler{
       double[] proj1 = this.getProjection(m, x1, y1);
       double[] proj2 = this.getProjection(m, x2, y2);
 
-      //debug
-      if(i == 0) System.out.println(Arrays.toString(proj1));
-
       //Check if projections don't overlap - if they don't, they aren't colliding
       if(proj1[0] < proj2[1] || proj2[0] < proj1[1]) return false;
     }

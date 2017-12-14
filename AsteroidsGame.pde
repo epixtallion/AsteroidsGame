@@ -115,7 +115,6 @@ void collisionCheck(){
       Math.sqrt(Math.pow(a.getX()-main.getX(), 2)+Math.pow(a.getY()-main.getY(), 2));
     if (distance < a.getSize()*Math.sqrt(5) + sqrt(200)){*/
       if (collisions.shapesCollide(a, main)) {
-        System.out.println("Collision! "+Math.random());
         collide = true;
         break;
       }

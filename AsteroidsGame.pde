@@ -11,6 +11,8 @@ private final CollisionHandler collisions = new CollisionHandler();
 
 Spaceship main;
 
+ArrayList<Bullet> bullets = new ArrayList<Bullet>();
+
 boolean debug = false;
 private final int TURN_SPEED = 4;
 private final float SPEED = 0.1;
@@ -126,6 +128,7 @@ void collisionCheck(){
 
 void keyPressed(){
   if (key == 'q' || key == 'Q') debug = !debug;
+  if (key == '') System.out.println("space");
   if (key == 'b' || key == 'B'){
     //Hyperspace
     main.setX( (int) (Math.random()*647-6) );

@@ -26,7 +26,7 @@ class Asteroid extends SpaceFloater implements Collidable {
     myPointDirection = Math.random()*364-3;
     myRotationSpeed = (int) (Math.random()*2) == 1 ? 5/mySize : -5/mySize;
   }
-  private Asteroid breakApart(){
+  public Asteroid breakApart(){
     this.mySize = mySize - 1;
     myRotationSpeed = 5/mySize;
     return new Asteroid(mySize);

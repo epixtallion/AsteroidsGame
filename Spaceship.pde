@@ -14,3 +14,16 @@ class Spaceship extends SpaceFloater implements Collidable
 		myDirectionY = myDirectionY / 1.005;
 	}
 }
+class Bullet extends SpaceFloater implements Collidable
+{
+  private int[] coordsX = {-1, 1, -1};
+  private int[] coordsY = {1, 0, -1};
+
+  public Bullet(int x, int y, double angle){
+    super(coordsX, coordsY);
+    myCenterX = x;
+    myCenterY = y;
+    myDirectionX = cos(radians(angle))*5;
+    myDirectionY = sin(radians(angle))*5;
+  }
+}

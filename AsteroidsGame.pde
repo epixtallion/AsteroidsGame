@@ -110,25 +110,40 @@ void keyCheck(){
 boolean debugCollide = false;
 void collisionCheck(){
   boolean collide = false;
-  for(Asteroid a : asteroids){
-    //Get distance between asteroid and spaceship
 
-    /*double distance =
-      Math.sqrt(Math.pow(a.getX()-main.getX(), 2)+Math.pow(a.getY()-main.getY(), 2));
-    if (distance < a.getSize()*Math.sqrt(5) + sqrt(200)){*/
+  for(int i = 0; i < asteroids.size(); i++){
+    //Check each bullet for collisions
+    for(Bullet b : bullets){
+      if(collisions.shapesCollide(asteroids[i], b)){
+        Asteroid a2 = asteroids[i].breakApart();
+
+        if (asteroids[i].getSize() != 0){
+          asteroids.add(a2);
+        }
+      }
+
+      if(asteroids[i].getSize() == 0){
+        asteroids.remove(i);
+        i--;
+      }
+    }
       if (collisions.shapesCollide(a, main)) {
         collide = true;
         break;
       }
       collisions.shapesCollide(a, main);
-    //}
   }
+  
+  //Do something here when collisions between Spaceship and Asteroids happen
   debugCollide = collide;
 }
 
 void keyPressed(){
   if (key == 'q' || key == 'Q') debug = !debug;
-  if (key == '') System.out.println("space");
+  if (key == 'SPACE'){
+    System.out.println("space");
+    bullets.add(new Bullet(main.getX(), main.getY(), main.getPointDirection()));
+  }
   if (key == 'b' || key == 'B'){
     //Hyperspace
     main.setX( (int) (Math.random()*647-6) );

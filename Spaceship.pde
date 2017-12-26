@@ -20,10 +20,12 @@ class Bullet extends SpaceFloater implements Collidable
   private int[] coordsY = {1, 0, -1};
 
   public Bullet(int x, int y, double angle){
-    super(coordsX, coordsY);
+    super(false);
+    this.xCorners = coordsX;
+    this.yCorners = coordsY;
     myCenterX = x;
     myCenterY = y;
-    myDirectionX = cos(radians(angle))*5;
-    myDirectionY = sin(radians(angle))*5;
+    myDirectionX = cos(radians((float)angle))*5;
+    myDirectionY = sin(radians((float)angle))*5;
   }
 }

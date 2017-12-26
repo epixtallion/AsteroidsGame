@@ -114,33 +114,33 @@ void collisionCheck(){
   for(int i = 0; i < asteroids.size(); i++){
     //Check each bullet for collisions
     for(Bullet b : bullets){
-      if(collisions.shapesCollide(asteroids[i], b)){
-        Asteroid a2 = asteroids[i].breakApart();
+      if(collisions.shapesCollide(asteroids.get(i), b)){
+        Asteroid a2 = asteroids.get(i).breakApart();
 
-        if (asteroids[i].getSize() != 0){
+        if (asteroids.get(i).getSize() != 0){
           asteroids.add(a2);
         }
       }
 
-      if(asteroids[i].getSize() == 0){
+      if(asteroids.get(i).getSize() == 0){
         asteroids.remove(i);
         i--;
       }
     }
-      if (collisions.shapesCollide(a, main)) {
+      if (collisions.shapesCollide(asteroids.get(i), main)) {
         collide = true;
         break;
       }
-      collisions.shapesCollide(a, main);
+      collisions.shapesCollide(asteroids.get(i), main);
   }
-  
+
   //Do something here when collisions between Spaceship and Asteroids happen
   debugCollide = collide;
 }
 
 void keyPressed(){
   if (key == 'q' || key == 'Q') debug = !debug;
-  if (key == 'SPACE'){
+  if (key == ' '){
     System.out.println("space");
     bullets.add(new Bullet(main.getX(), main.getY(), main.getPointDirection()));
   }

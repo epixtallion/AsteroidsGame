@@ -30,8 +30,9 @@ class Asteroid extends SpaceFloater implements Collidable {
     this.mySize = mySize - 1;
     myRotationSpeed = 5/mySize;
     Asteroid a = new Asteroid(mySize);
-    a.setX(myCenterX+size*8);
-    a.setY(myCenterY+size*8);
+    a.setX((int)(myCenterX+mySize*8));
+    a.setY((int)(myCenterY+mySize*8));
+    return a;
   }
 
   public int getSize(){return mySize*8;}

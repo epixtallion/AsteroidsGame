@@ -174,6 +174,7 @@ void keyPressed(){
     main.setDirectionX(0);
     main.setDirectionY(0);
   }
+  if (main.getLives() < 0 && key == 'r' || key == 'R') resetGame();
 }
 void drawIndicators(){
   //Draw health
@@ -212,4 +213,33 @@ void drawIndicators(){
     textSize(30);
     text("Press R to restart.", width/2, height/2+40);
   }
+}
+void resetGame(){
+  //Reset ArrayLists
+  stars = new ArrayList<Star>();
+  asteroids = new ArrayList<Asteroid>();
+
+  //Initialize stars
+  for (int i = 0; i < NUM_STARS; i++) {
+  	int[] col = {
+  				(int) (Math.random()*203+53),
+  				(int) (Math.random()*202+53),
+  				(int) (Math.random()*202+53)
+  			};
+  	stars.add(new Star(
+  			(int) (Math.random()*647-6),
+  			(int) (Math.random()*485-4),
+  			col
+  		));
+  }
+
+  //Initialize asteroids
+  for (int i = 0; i<NUM_ASTEROIDS; i++){
+    asteroids.add(new Asteroid(3));
+  }
+
+  //Initialize main spaceship
+  int[] mainX = {10, -10, -5, -10};
+  int[] mainY = {0, -10, -0, 10};
+  main = new Spaceship(mainX, mainY);
 }

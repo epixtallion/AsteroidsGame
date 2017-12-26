@@ -72,4 +72,24 @@ class Asteroid extends SpaceFloater implements Collidable {
 
   	popMatrix();
   }
+  public double[] getXVertices(){
+    double[] ret = new double[xCorners.length];
+    //Loop through and apply angle, then add myCenterX
+    for (int i = 0; i < xCorners.length; i++){
+      double distance = Math.sqrt(Math.pow(xCorners[i]*mySize, 2)+Math.pow(yCorners[i]*mySize, 2));
+      double angle = atan2(xCorners[i]*mySize, yCorners[i]*mySize);
+      ret[i] = cos(radians((float)myPointDirection)+(float)angle)*distance+myCenterX;
+    }
+    return ret;
+  }
+  public double[] getYVertices(){
+    double[] ret = new double[yCorners.length];
+    //Loop through and apply angle, then add myCenter Y
+    for (int i = 0; i < yCorners.length; i++){
+      double distance = Math.sqrt(Math.pow(xCorners[i]*mySize, 2)+Math.pow(yCorners[i]*mySize, 2));
+      double angle = atan2(xCorners[i]*mySize, yCorners[i]*mySize);
+      ret[i] = sin(radians((float)myPointDirection)+(float)angle)*distance+myCenterY;
+    }
+    return ret;
+  }
 }

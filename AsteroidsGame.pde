@@ -75,6 +75,17 @@ public void draw()
     a.show();
   }
 
+  //Draw + move bullets
+  for (int i = 0; i < bullets.size(); i++){
+    bullets.get(i).move();
+    bullets.get(i).show();
+
+    //Remove bullet if it is off-screen
+    if(bullets.get(i).getX() > width || bullets.get(i).getX()<0
+      || bullets.get(i).getY() > height || bullets.get(i).getY()<0)
+      bullets.remove(i);
+  }
+
   //Debug
   if (debug){
     fill(255);
@@ -114,6 +125,7 @@ void collisionCheck(){
   for(int i = 0; i < asteroids.size(); i++){
     //Check each bullet for collisions
     for(Bullet b : bullets){
+      //Break apart asteroid if hit by bullet
       if(collisions.shapesCollide(asteroids.get(i), b)){
         Asteroid a2 = asteroids.get(i).breakApart();
 
@@ -121,17 +133,19 @@ void collisionCheck(){
           asteroids.add(a2);
         }
       }
-
-      if(asteroids.get(i).getSize() == 0){
-        asteroids.remove(i);
-        i--;
-      }
     }
-      if (collisions.shapesCollide(asteroids.get(i), main)) {
-        collide = true;
-        break;
-      }
-      collisions.shapesCollide(asteroids.get(i), main);
+    //If the spaceship collides with asteroid
+    if (collisions.shapesCollide(asteroids.get(i), main)) {
+      //TODO do something - health depletion or game over or something
+      collide = true;
+      break;
+    }
+
+    //If the asteroid is size 0, remove it
+    if(asteroids.get(i).getSize() == 0){
+      asteroids.remove(i);
+      i--;
+    }
   }
 
   //Do something here when collisions between Spaceship and Asteroids happen

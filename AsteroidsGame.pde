@@ -86,6 +86,9 @@ public void draw()
       bullets.remove(i);
   }
 
+  //Draw lives + ammo indicator
+  drawIndicators();
+
   //Debug
   if (debug){
     fill(255);
@@ -129,6 +132,7 @@ void collisionCheck(){
       if(collisions.shapesCollide(asteroids.get(i), bullets.get(b))){
         //Remove bullet
         bullets.remove(b);
+        b--;
 
         //Break apart asteroid
         Asteroid a2 = asteroids.get(i).breakApart();
@@ -144,11 +148,13 @@ void collisionCheck(){
     if(asteroids.get(i).getSize() <= 0){
       asteroids.remove(i);
       i--;
+      continue;
     }
     //If the spaceship collides with asteroid
-    if (collisions.shapesCollide(asteroids.get(i), main)) {
+    if (!(main.isInvulnerable())&&main.isVisible() && collisions.shapesCollide(asteroids.get(i), main)) {
       //TODO do something - health depletion or game over or something
       collide = true;
+      main.die();
       break;
     }
   }
@@ -169,4 +175,8 @@ void keyPressed(){
     main.setDirectionX(0);
     main.setDirectionY(0);
   }
+}
+void drawIndicators(){
+  //Draw health bar
+
 }

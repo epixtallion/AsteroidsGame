@@ -8,7 +8,7 @@ class Asteroid extends SpaceFloater implements Collidable {
     super(false);
     this.myCenterX = Math.random()*647-6;
     this.myCenterY = Math.random()*485-4;
-    this.myColor = color(255);
+    this.myColor = color(150);
     this.mySize = size;
 
     //default point array
@@ -18,8 +18,8 @@ class Asteroid extends SpaceFloater implements Collidable {
     this.xCorners = new int[coordsX.length];
     this.yCorners = new int[coordsX.length];
     for (int i = 0; i<coordsX.length; i++){
-      this.xCorners[i] = coordsX[i]*size*8;
-      this.yCorners[i] = coordsY[i]*size*8;
+      this.xCorners[i] = coordsX[i]*8;
+      this.yCorners[i] = coordsY[i]*8;
     }
     myDirectionX = Math.random()*3-1.5;
     myDirectionY = Math.random()*3-1.5;
@@ -47,5 +47,29 @@ class Asteroid extends SpaceFloater implements Collidable {
     double distance = Math.sqrt(Math.pow(xCorners[i], 2)+Math.pow(yCorners[i], 2));
     double angle = atan2(xCorners[i], yCorners[i]);
 
+  }
+
+  //Override show
+  public void show(){
+    //Convert radians
+    float dRadians = radians((float) myPointDirection);
+
+    pushMatrix();
+  	translate((float) myCenterX, (float) myCenterY);
+  	rotate(dRadians);
+
+    if(IS_SPRITE_FLOATER){
+      //code for sprite rendering
+    } else {
+      fill(myColor);
+      beginShape();
+      for (int nI = 0; nI < xCorners.length; nI++)
+      {
+        vertex(xCorners[nI]*mySize, yCorners[nI]*mySize);
+      }
+      endShape(CLOSE);
+    }
+
+  	popMatrix();
   }
 }

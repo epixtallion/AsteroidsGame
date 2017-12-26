@@ -124,12 +124,17 @@ void collisionCheck(){
 
   for(int i = 0; i < asteroids.size(); i++){
     //Check each bullet for collisions
-    for(Bullet b : bullets){
+    for(int b = 0; b < bullets.size(); b++){
       //Break apart asteroid if hit by bullet
-      if(collisions.shapesCollide(asteroids.get(i), b)){
+      if(collisions.shapesCollide(asteroids.get(i), bullets.get(b))){
+        //Remove bullet
+        bullets.remove(b);
+        b--;
+        //Break apart asteroid
         Asteroid a2 = asteroids.get(i).breakApart();
 
-        if (asteroids.get(i).getSize() != 0){
+        //If the asteroid that just broke apart has a size bigger than 0, duplicate
+        if (asteroids.get(i).getSize() > 0){
           asteroids.add(a2);
         }
       }
@@ -155,7 +160,6 @@ void collisionCheck(){
 void keyPressed(){
   if (key == 'q' || key == 'Q') debug = !debug;
   if (key == ' '){
-    System.out.println("space");
     bullets.add(new Bullet(main.getX(), main.getY(), main.getPointDirection()));
   }
   if (key == 'b' || key == 'B'){

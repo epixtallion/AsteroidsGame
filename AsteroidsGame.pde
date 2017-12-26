@@ -129,7 +129,7 @@ void collisionCheck(){
       if(collisions.shapesCollide(asteroids.get(i), bullets.get(b))){
         //Remove bullet
         bullets.remove(b);
-        b--;
+
         //Break apart asteroid
         Asteroid a2 = asteroids.get(i).breakApart();
 
@@ -139,17 +139,17 @@ void collisionCheck(){
         }
       }
     }
+
+    //If the asteroid is size 0, remove it
+    if(asteroids.get(i).getSize() <= 0){
+      asteroids.remove(i);
+      i--;
+    }
     //If the spaceship collides with asteroid
     if (collisions.shapesCollide(asteroids.get(i), main)) {
       //TODO do something - health depletion or game over or something
       collide = true;
       break;
-    }
-
-    //If the asteroid is size 0, remove it
-    if(asteroids.get(i).getSize() == 0){
-      asteroids.remove(i);
-      i--;
     }
   }
 

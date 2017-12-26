@@ -28,6 +28,8 @@ class Asteroid extends SpaceFloater implements Collidable {
   }
   public Asteroid breakApart(){
     this.mySize = mySize - 1;
+    if(mySize < 0) mySize = 0;
+    if(mySize > 3) mySize = 0;
     myRotationSpeed*=1.2;
     Asteroid a = new Asteroid(mySize);
     a.setX((int)(myCenterX+mySize*8));
@@ -35,14 +37,13 @@ class Asteroid extends SpaceFloater implements Collidable {
     return a;
   }
 
-  public int getSize(){return mySize*8;}
+  public int getSize(){return mySize;}
 
   //Override move()
   public void move(){
     super.move();
     myPointDirection+=myRotationSpeed;
 
-    //debug
     int i = 1;
     double distance = Math.sqrt(Math.pow(xCorners[i], 2)+Math.pow(yCorners[i], 2));
     double angle = atan2(xCorners[i], yCorners[i]);
@@ -71,7 +72,14 @@ class Asteroid extends SpaceFloater implements Collidable {
     }
 
   	popMatrix();
+    //debug
+    if(debug){
+      fill(255);
+      text(mySize, (float)myCenterX, (float)myCenterY);
+    }
   }
+
+  //Override collision vertices to include size
   public double[] getXVertices(){
     double[] ret = new double[xCorners.length];
     //Loop through and apply angle, then add myCenterX

@@ -152,7 +152,6 @@ void collisionCheck(){
     }
     //If the spaceship collides with asteroid
     if (!(main.isInvulnerable())&&main.isVisible() && collisions.shapesCollide(asteroids.get(i), main)) {
-      //TODO do something - health depletion or game over or something
       collide = true;
       main.die();
       break;
@@ -165,7 +164,7 @@ void collisionCheck(){
 
 void keyPressed(){
   if (key == 'q' || key == 'Q') debug = !debug;
-  if (key == ' '){
+  if (key == ' ' && main.isVisible()){
     bullets.add(new Bullet(main.getX(), main.getY(), main.getPointDirection()));
   }
   if (key == 'b' || key == 'B'){
@@ -177,6 +176,40 @@ void keyPressed(){
   }
 }
 void drawIndicators(){
-  //Draw health bar
+  //Draw health
+  for(int i = 0; i < main.getLives(); i++){
+    pushMatrix();
+    translate(width-10-25-50*i, 35);
+    fill(249, 44, 103);
+    if(main.isInvulnerable()) fill(222, 255, 153);
+    noStroke();
 
+    beginShape();
+    //Draw heart
+    vertex(0,-15);
+    vertex(15,-20);
+    vertex(15,-5);
+    vertex(0,15);
+    vertex(-15,-5);
+    vertex(-15,-20);
+    endShape(CLOSE);
+
+    popMatrix();
+  }
+
+  //Draw invulnerability text
+  textAlign(RIGHT);
+  textSize(20);
+  if(main.isInvulnerable()) text("INVULNERABLE!", width-10, height-20);
+  textAlign(LEFT);
+
+  //Draw game over text
+  if(main.getLives()<0){
+    textAlign(CENTER);
+    textSize(72);
+    fill(255);
+    text("GAME OVER", width/2, height/2);
+    textSize(30);
+    text("Press R to restart.", width/2, height/2+40);
+  }
 }

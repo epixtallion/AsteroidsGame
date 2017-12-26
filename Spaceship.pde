@@ -14,7 +14,7 @@ class Spaceship extends SpaceFloater implements Collidable
     visible = true;
     deathCountdown = 0;
     lives = 3;
-    invulnCountdown = 0;
+    invulnCountdown = 300;
 	}
 	public void move(){
 		super.move();
@@ -26,8 +26,9 @@ class Spaceship extends SpaceFloater implements Collidable
       super.show();
       if(invulnCountdown > 0){
         invulnCountdown--;
+        int opacity = (invulnCountdown/50%2 == 0) ? 255 : 80;
         myColor = color(red(myColor), green(myColor), blue(myColor),
-          -1*invulnCountdown/3+100);
+          opacity);
       }
     }
     else {
@@ -35,9 +36,13 @@ class Spaceship extends SpaceFloater implements Collidable
       if(deathCountdown == 0) {
         myCenterX = width/2;
         myCenterY = height/2;
-        visible = true;
+        myDirectionX = 0;
+        myDirectionY = 0;
         lives--;
-        invulnCountdown = 300;
+        if(lives>-1){
+          visible = true;
+          invulnCountdown = 300;
+        }
       }
     }
   }
@@ -45,7 +50,9 @@ class Spaceship extends SpaceFloater implements Collidable
   public boolean isVisible(){return visible;}
   public void die(){
     visible = false;
-    deathCountdown = 180;
+    if(lives > 0){
+      deathCountdown = 180;
+    } else lives--;
   }
   public int getLives(){return lives;}
 }

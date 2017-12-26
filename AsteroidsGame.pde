@@ -11,6 +11,8 @@ private final CollisionHandler collisions = new CollisionHandler();
 
 Spaceship main;
 
+ArrayList<Bullet> bullets = new ArrayList<Bullet>();
+
 boolean debug = false;
 private final int TURN_SPEED = 4;
 private final float SPEED = 0.1;
@@ -73,6 +75,17 @@ public void draw()
     a.show();
   }
 
+  //Draw + move bullets
+  for (int i = 0; i < bullets.size(); i++){
+    bullets.get(i).move();
+    bullets.get(i).show();
+
+    //Remove bullet if it is off-screen
+    if(bullets.get(i).getX() > width || bullets.get(i).getX()<0
+      || bullets.get(i).getY() > height || bullets.get(i).getY()<0)
+      bullets.remove(i);
+  }
+
   //Debug
   if (debug){
     fill(255);
@@ -108,24 +121,47 @@ void keyCheck(){
 boolean debugCollide = false;
 void collisionCheck(){
   boolean collide = false;
-  for(Asteroid a : asteroids){
-    //Get distance between asteroid and spaceship
 
-    /*double distance =
-      Math.sqrt(Math.pow(a.getX()-main.getX(), 2)+Math.pow(a.getY()-main.getY(), 2));
-    if (distance < a.getSize()*Math.sqrt(5) + sqrt(200)){*/
-      if (collisions.shapesCollide(a, main)) {
-        collide = true;
-        break;
+  for(int i = 0; i < asteroids.size(); i++){
+    //Check each bullet for collisions
+    for(int b = 0; b < bullets.size(); b++){
+      //Break apart asteroid if hit by bullet
+      if(collisions.shapesCollide(asteroids.get(i), bullets.get(b))){
+        //Remove bullet
+        bullets.remove(b);
+        b--;
+        //Break apart asteroid
+        Asteroid a2 = asteroids.get(i).breakApart();
+
+        //If the asteroid that just broke apart has a size bigger than 0, duplicate
+        if (asteroids.get(i).getSize() > 0){
+          asteroids.add(a2);
+        }
       }
-      collisions.shapesCollide(a, main);
-    //}
+    }
+    //If the spaceship collides with asteroid
+    if (collisions.shapesCollide(asteroids.get(i), main)) {
+      //TODO do something - health depletion or game over or something
+      collide = true;
+      break;
+    }
+
+    //If the asteroid is size 0, remove it
+    if(asteroids.get(i).getSize() == 0){
+      asteroids.remove(i);
+      i--;
+    }
   }
+
+  //Do something here when collisions between Spaceship and Asteroids happen
   debugCollide = collide;
 }
 
 void keyPressed(){
   if (key == 'q' || key == 'Q') debug = !debug;
+  if (key == ' '){
+    bullets.add(new Bullet(main.getX(), main.getY(), main.getPointDirection()));
+  }
   if (key == 'b' || key == 'B'){
     //Hyperspace
     main.setX( (int) (Math.random()*647-6) );

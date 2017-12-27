@@ -5,7 +5,7 @@ private final int NUM_STARS = 80;
 ArrayList<Star> stars = new ArrayList<Star>();
 
 ArrayList<Asteroid> asteroids = new ArrayList<Asteroid>();
-private final int NUM_ASTEROIDS = 7;
+private int numAsteroids = 6;
 
 private final CollisionHandler collisions = new CollisionHandler();
 
@@ -38,7 +38,7 @@ public void setup()
   }
 
   //Initialize asteroids
-  for (int i = 0; i<NUM_ASTEROIDS; i++){
+  for (int i = 0; i<numAsteroids; i++){
     asteroids.add(new Asteroid(3));
   }
 
@@ -174,7 +174,8 @@ void keyPressed(){
     main.setDirectionX(0);
     main.setDirectionY(0);
   }
-  if (main.getLives() < 0 && key == 'r' || key == 'R') resetGame();
+  if ((main.getLives() < 0 || asteroids.size() == 0) && key == 'r' || key == 'R')
+    resetGame();
 }
 void drawIndicators(){
   //Draw health
@@ -201,6 +202,7 @@ void drawIndicators(){
   //Draw invulnerability text
   textAlign(RIGHT);
   textSize(20);
+  fill(222, 255, 153);
   if(main.isInvulnerable()) text("INVULNERABLE!", width-10, height-20);
   textAlign(LEFT);
 
@@ -213,11 +215,27 @@ void drawIndicators(){
     textSize(30);
     text("Press R to restart.", width/2, height/2+40);
   }
+  if(asteroids.size() == 0){
+    textAlign(CENTER);
+    textSize(72);
+    fill(255);
+    text("LEVEL CLEARED!", width/2, height/2);
+    textSize(30);
+    text("Press R to go to next level.", width/2, height/2+40);
+  }
 }
 void resetGame(){
   //Reset ArrayLists
   stars = new ArrayList<Star>();
   asteroids = new ArrayList<Asteroid>();
+
+  if(main.getLives() < 0){
+    //Initialize main spaceship
+    int[] mainX = {10, -10, -5, -10};
+    int[] mainY = {0, -10, -0, 10};
+    main = new Spaceship(mainX, mainY);
+    numAsteroids = 6;
+  } else numAsteroids++;
 
   //Initialize stars
   for (int i = 0; i < NUM_STARS; i++) {
@@ -234,12 +252,7 @@ void resetGame(){
   }
 
   //Initialize asteroids
-  for (int i = 0; i<NUM_ASTEROIDS; i++){
+  for (int i = 0; i<numAsteroids; i++){
     asteroids.add(new Asteroid(3));
   }
-
-  //Initialize main spaceship
-  int[] mainX = {10, -10, -5, -10};
-  int[] mainY = {0, -10, -0, 10};
-  main = new Spaceship(mainX, mainY);
 }

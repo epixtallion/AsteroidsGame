@@ -258,6 +258,8 @@ void resetGame(){
     main.addMaxBullets(5);
     main.setLives(main.getLives() + 1);
     main.setInvulnerability();
+    main.setX(width/2);
+    main.setY(height/2);
   }
 
   //Initialize stars

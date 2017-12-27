@@ -21,7 +21,7 @@ class Spaceship extends SpaceFloater implements Collidable
     invulnCountdown = 300;
     numBullets = 25;
     maxBullets = 25;
-    bulletRegen = 60;
+    bulletRegen = 100;
 	}
 	public void move(){
 		super.move();
@@ -39,7 +39,7 @@ class Spaceship extends SpaceFloater implements Collidable
         if(numBullets < maxBullets){
           numBullets++;
         }
-        bulletRegen = 60;
+        bulletRegen = 100;
       }
       //If invulnerable, make opacity blink
       if(invulnCountdown > 0){

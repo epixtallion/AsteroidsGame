@@ -4,6 +4,10 @@ class Spaceship extends SpaceFloater implements Collidable
   private int deathCountdown;
   private int lives;
   private int invulnCountdown;
+  private int numBullets;
+  private int maxBullets;
+  private int bulletRegen;
+
   public Spaceship(int[] x, int[] y){
 		super(x, y);
     myColor = color(
@@ -15,6 +19,9 @@ class Spaceship extends SpaceFloater implements Collidable
     deathCountdown = 0;
     lives = 3;
     invulnCountdown = 300;
+    numBullets = 25;
+    maxBullets = 25;
+    bulletRegen = 60;
 	}
 	public void move(){
 		super.move();
@@ -22,8 +29,19 @@ class Spaceship extends SpaceFloater implements Collidable
 		myDirectionY = myDirectionY / 1.005;
 	}
   public void show(){
+    //If visible, do normal stuff
     if(visible) {
       super.show();
+      //Subtract from the countdown
+      bulletRegen--;
+      //If the timer is up, reset it and add a bullet
+      if(bulletRegen == 0){
+        if(numBullets < maxBullets){
+          numBullets++;
+        }
+        bulletRegen = 60;
+      }
+      //If invulnerable, make opacity blink
       if(invulnCountdown > 0){
         invulnCountdown--;
         int opacity = (invulnCountdown/50%2 == 0) ? 255 : 80;
@@ -32,13 +50,17 @@ class Spaceship extends SpaceFloater implements Collidable
       }
     }
     else {
+      //If the spaceship is invisible, countdown to respawn
       if(deathCountdown > 0) deathCountdown--;
+      //Respawn
       if(deathCountdown == 0) {
         myCenterX = width/2;
         myCenterY = height/2;
         myDirectionX = 0;
         myDirectionY = 0;
+        numBullets = maxBullets;
         lives--;
+        //If all lives are taken up, then don't make visible
         if(lives>-1){
           visible = true;
           invulnCountdown = 300;
@@ -55,6 +77,11 @@ class Spaceship extends SpaceFloater implements Collidable
     } else lives--;
   }
   public int getLives(){return lives;}
+
+  public void fireBullet(){if(numBullets > 0) numBullets--; }
+  public int getBullets(){return numBullets;}
+  public void addMaxBullets(int b){maxBullets+=b; numBullets = maxBullets;}
+  public int getMaxBullets(){return maxBullets;}
 }
 class Bullet extends SpaceFloater implements Collidable
 {

@@ -12,6 +12,7 @@ private final CollisionHandler collisions = new CollisionHandler();
 Spaceship main;
 
 ArrayList<Bullet> bullets = new ArrayList<Bullet>();
+private int bulletCountdown = 0;
 
 boolean debug = false;
 private final int TURN_SPEED = 4;
@@ -86,6 +87,9 @@ public void draw()
       bullets.remove(i);
   }
 
+  //Bullet countdown
+  if(bulletCountdown > 0) bulletCountdown--;
+
   //Draw lives + ammo indicator
   drawIndicators();
 
@@ -98,6 +102,7 @@ public void draw()
     text("Keys pressed: " + key, 10, 40);
     text("Is key pressed? " + keyPressed, 10, 60);
     text("Colliding? " + debugCollide, 10, 80);
+    text("Number of bullets: " + main.getBullets(), 10, 100);
 
     //System.out.println("Asteroid coordsX: "+Arrays.toString(asteroids.get(0).getXVertices()));
   }
@@ -163,8 +168,14 @@ void collisionCheck(){
 
 void keyPressed(){
   if (key == 'q' || key == 'Q') debug = !debug;
-  if (key == ' ' && main.isVisible()){
-    bullets.add(new Bullet(main.getX(), main.getY(), main.getPointDirection()));
+  if (key == ' ' && main.isVisible() && bulletCountdown == 0){
+    if(main.getBullets() > 0){
+      bullets.add(new Bullet(main.getX(), main.getY(), main.getPointDirection()));
+      bulletCountdown = 10;
+      main.fireBullet();
+    } else {
+      bulletCountdown = 150;
+    }
   }
   if (key == 'b' || key == 'B'){
     //Hyperspace
@@ -197,6 +208,14 @@ void drawIndicators(){
 
     popMatrix();
   }
+
+  //Draw ammo indicator
+  fill(230);
+  stroke(1);
+  rect(width-20, 60, -5*main.getMaxBullets(), 15);
+  noStroke();
+  fill(111, 219, 161);
+  rect(width-21, 61, -5*main.getBullets(), 13);
 
   //Draw invulnerability text
   textAlign(RIGHT);
@@ -234,7 +253,10 @@ void resetGame(){
     int[] mainY = {0, -10, -0, 10};
     main = new Spaceship(mainX, mainY);
     numAsteroids = 6;
-  } else numAsteroids++;
+  } else {
+    numAsteroids++;
+    main.addMaxBullets(5);
+  }
 
   //Initialize stars
   for (int i = 0; i < NUM_STARS; i++) {

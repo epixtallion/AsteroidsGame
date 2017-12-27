@@ -69,6 +69,7 @@ class Spaceship extends SpaceFloater implements Collidable
     }
   }
   public boolean isInvulnerable(){return invulnCountdown > 0;}
+  public void setInvulnerability(){invulnCountdown = 300;}
   public boolean isVisible(){return visible;}
   public void die(){
     visible = false;
@@ -77,6 +78,7 @@ class Spaceship extends SpaceFloater implements Collidable
     } else lives--;
   }
   public int getLives(){return lives;}
+  public void setLives(int l){lives = l;}
 
   public void fireBullet(){if(numBullets > 0) numBullets--; }
   public int getBullets(){return numBullets;}

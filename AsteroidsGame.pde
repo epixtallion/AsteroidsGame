@@ -256,6 +256,8 @@ void resetGame(){
   } else {
     numAsteroids++;
     main.addMaxBullets(5);
+    main.setLives(main.getLives() + 1);
+    main.setInvulnerability();
   }
 
   //Initialize stars

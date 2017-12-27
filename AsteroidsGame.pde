@@ -132,7 +132,6 @@ void collisionCheck(){
       if(collisions.shapesCollide(asteroids.get(i), bullets.get(b))){
         //Remove bullet
         bullets.remove(b);
-        b--;
 
         //Break apart asteroid
         Asteroid a2 = asteroids.get(i).breakApart();

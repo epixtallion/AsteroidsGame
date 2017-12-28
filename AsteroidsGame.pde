@@ -151,7 +151,7 @@ void collisionCheck(){
         asteroids.get(i).getSize() > 0){
 
         //Add score
-        score+=(Math.sqrt(Math.pow(main.getX() - asteroids.get(i).getX(), 2)
+        score+=(int)(Math.sqrt(Math.pow(main.getX() - asteroids.get(i).getX(), 2)
           + Math.pow(main.getY() - asteroids.get(i).getY(), 2))/(6*asteroids.get(i).getSize())+2);
         //Remove bullet
         bullets.remove(b);

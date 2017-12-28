@@ -21,6 +21,9 @@ boolean debug = false;
 private final int TURN_SPEED = 4;
 private final float SPEED = 0.1;
 
+private int helpCountdown = 300;
+private boolean helpMode = false;
+
 
 public void setup()
 {
@@ -69,32 +72,34 @@ public void draw()
   	s.show();
   }
 
-  //Draw + move spaceship
-  main.move();
-  main.show();
+  if(!helpMode){
+    //Draw + move spaceship
+    main.move();
+    main.show();
 
-  //Draw + move asteroids
-  for (Asteroid a : asteroids){
-    a.move();
-    a.show();
-  }
+    //Draw + move asteroids
+    for (Asteroid a : asteroids){
+      a.move();
+      a.show();
+    }
 
-  //Draw + move bullets
-  for (int i = 0; i < bullets.size(); i++){
-    bullets.get(i).move();
-    bullets.get(i).show();
+    //Draw + move bullets
+    for (int i = 0; i < bullets.size(); i++){
+      bullets.get(i).move();
+      bullets.get(i).show();
 
-    //Remove bullet if it is off-screen
-    if(bullets.get(i).getX() > width || bullets.get(i).getX()<0
-      || bullets.get(i).getY() > height || bullets.get(i).getY()<0)
-      bullets.remove(i);
+      //Remove bullet if it is off-screen
+      if(bullets.get(i).getX() > width || bullets.get(i).getX()<0
+        || bullets.get(i).getY() > height || bullets.get(i).getY()<0)
+        bullets.remove(i);
+    }
   }
 
   //Bullet countdown
-  if(bulletCountdown > 0) bulletCountdown--;
+  if(bulletCountdown > 0 && !helpMode) bulletCountdown--;
 
   //Hyperspace countdown
-  if(hyperspaceCountdown < 1200) hyperspaceCountdown++;
+  if(hyperspaceCountdown < 1200 && !helpMode) hyperspaceCountdown++;
 
   //Draw lives + ammo indicator
   drawIndicators();
@@ -181,7 +186,8 @@ void collisionCheck(){
 
 void keyPressed(){
   if (key == 'q' || key == 'Q') debug = !debug;
-  if (key == ' ' && main.isVisible() && bulletCountdown == 0){
+  if (key == 'h' || key == 'H') helpMode = !helpMode;
+  if (key == ' ' && main.isVisible() && bulletCountdown == 0 && !helpMode){
     if(main.getBullets() > 0){
       bullets.add(new Bullet(main.getX(), main.getY(), main.getPointDirection()));
       bulletCountdown = 10;
@@ -190,7 +196,7 @@ void keyPressed(){
       bulletCountdown = 150;
     }
   }
-  if (key == 'b' || key == 'B'){
+  if (key == 'b' || key == 'B' && !helpMode){
     //Hyperspace
     if(hyperspaceCountdown == 1200){
       main.setX( (int) (Math.random()*647-6) );
@@ -204,77 +210,104 @@ void keyPressed(){
     resetGame();
 }
 void drawIndicators(){
-  //Draw health
-  for(int i = 0; i < main.getLives(); i++){
-    pushMatrix();
-    translate(width-10-25-50*i, 35);
-    fill(249, 44, 103);
-    if(main.isInvulnerable()) fill(222, 255, 153);
-    noStroke();
+  if(!helpMode){
+    //Draw health
+    for(int i = 0; i < main.getLives(); i++){
+      pushMatrix();
+      translate(width-10-25-50*i, 35);
+      fill(249, 44, 103);
+      if(main.isInvulnerable()) fill(222, 255, 153);
+      noStroke();
 
-    beginShape();
-    //Draw heart
-    vertex(0,-15);
-    vertex(15,-20);
-    vertex(15,-5);
-    vertex(0,15);
-    vertex(-15,-5);
-    vertex(-15,-20);
-    endShape(CLOSE);
+      beginShape();
+      //Draw heart
+      vertex(0,-15);
+      vertex(15,-20);
+      vertex(15,-5);
+      vertex(0,15);
+      vertex(-15,-5);
+      vertex(-15,-20);
+      endShape(CLOSE);
 
-    popMatrix();
-  }
+      popMatrix();
+    }
 
-  if(main.getLives() >= 0){
-    //Draw ammo indicator
-    fill(230);
-    stroke(1);
-    rect(width-20, 60, -5*main.getMaxBullets(), 15);
-    noStroke();
-    fill(111, 219, 161);
-    rect(width-21, 61, -5*main.getBullets(), 13);
+    if(main.getLives() >= 0){
+      //Draw ammo indicator
+      fill(230);
+      stroke(1);
+      rect(width-20, 60, -5*main.getMaxBullets(), 15);
+      noStroke();
+      fill(111, 219, 161);
+      rect(width-21, 61, -5*main.getBullets(), 13);
 
-    //Draw hyperspace indicator
-    fill(230);
-    stroke(1);
-    rect(width-20, 80, -100, 15);
-    noStroke();
-    if(hyperspaceCountdown == 1200) fill(111, 161, 219);
-    else fill(55, 80, 90);
-    rect(width-21, 81, hyperspaceCountdown/-12, 13);
+      //Draw hyperspace indicator
+      fill(230);
+      stroke(1);
+      rect(width-20, 80, -100, 15);
+      noStroke();
+      if(hyperspaceCountdown == 1200) fill(111, 161, 219);
+      else fill(55, 80, 90);
+      rect(width-21, 81, hyperspaceCountdown/-12, 13);
 
-    //Draw score text
-    fill(255);
-    textSize(20);
+      //Draw score text
+      fill(255);
+      textSize(20);
+      textAlign(RIGHT);
+      text("SCORE: " + score, width-20, 120);
+    }
+
+    //Draw invulnerability text
     textAlign(RIGHT);
-    text("SCORE: " + score, width-20, 120);
-  }
+    textSize(20);
+    fill(222, 255, 153);
+    if(main.isInvulnerable()) text("INVULNERABLE!", width-10, height-20);
+    textAlign(LEFT);
 
-  //Draw invulnerability text
-  textAlign(RIGHT);
-  textSize(20);
-  fill(222, 255, 153);
-  if(main.isInvulnerable()) text("INVULNERABLE!", width-10, height-20);
-  textAlign(LEFT);
+    //Draw help text
+    textAlign(LEFT);
+    textSize(25);
+    if(helpCountdown > 0){
+      fill(255);
+      text("Press H at any time for help", 20, 30);
+      helpCountdown--;
+    }
 
-  //Draw game over text
-  if(main.getLives()<0){
-    textAlign(CENTER);
-    textSize(72);
-    fill(255);
-    text("GAME OVER", width/2, height/2);
-    textSize(24);
-    text("Your score was " + score, width/2, height/2+34);
-    textSize(30);
-    text("Press R to restart.", width/2, height/2+40+34);
+    //Draw game over text
+    if(main.getLives()<0){
+      textAlign(CENTER);
+      textSize(72);
+      fill(255);
+      text("GAME OVER", width/2, height/2);
+      textSize(24);
+      text("Your score was " + score, width/2, height/2+34);
+      textSize(30);
+      text("Press R to restart.", width/2, height/2+40+34);
+    }
+    if(asteroids.size() == 0){
+      textAlign(CENTER);
+      textSize(72);
+      fill(255);
+      text("LEVEL CLEARED!", width/2, height/2);
+      textSize(30);
+      text("Press R to go to next level.", width/2, height/2+40);
+    }
   }
-  if(asteroids.size() == 0){
+  else {
+    helpCountdown = 0;
+
     textAlign(CENTER);
-    textSize(72);
+    textSize(25);
     fill(255);
-    text("LEVEL CLEARED!", width/2, height/2);
-    textSize(30);
-    text("Press R to go to next level.", width/2, height/2+40);
+    text("Use WASD to move, spacebar to shoot", width/2, height/5+17);
+
+    text("Get more points for shooting smaller,", width/2, height/5*2-17);
+    text("more far away asteroids", width/2, height/5*2+17);
+
+    text("Clearing all the asteroids gives one more life", width/2, height/5*3-17);
+    text("and 5 more bullets, and the map gets harder", width/2, height/5*3+17);
+
+    text("Using all your bullets needs 2.5 seconds to reload", width/2, height/5*4-17);
   }
 }
 void resetGame(){

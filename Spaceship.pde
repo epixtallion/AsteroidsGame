@@ -32,8 +32,10 @@ class Spaceship extends SpaceFloater implements Collidable
     //If visible, do normal stuff
     if(visible) {
       super.show();
-      //Subtract from the countdown
-      bulletRegen--;
+      if(!helpMode){
+        //Subtract from the countdown
+        bulletRegen--;
+      }
       //If the timer is up, reset it and add a bullet
       if(bulletRegen == 0){
         if(numBullets < maxBullets){
@@ -42,7 +44,7 @@ class Spaceship extends SpaceFloater implements Collidable
         bulletRegen = 100;
       }
       //If invulnerable, make opacity blink
-      if(invulnCountdown > 0){
+      if(invulnCountdown > 0 && !helpMode){
         invulnCountdown--;
         int opacity = (invulnCountdown/50%2 == 0) ? 255 : 80;
         myColor = color(red(myColor), green(myColor), blue(myColor),
@@ -51,7 +53,7 @@ class Spaceship extends SpaceFloater implements Collidable
     }
     else {
       //If the spaceship is invisible, countdown to respawn
-      if(deathCountdown > 0) deathCountdown--;
+      if(deathCountdown > 0 && !helpMode) deathCountdown--;
       //Respawn
       if(deathCountdown == 0) {
         myCenterX = width/2;

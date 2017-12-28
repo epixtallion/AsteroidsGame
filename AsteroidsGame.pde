@@ -11,6 +11,7 @@ private final CollisionHandler collisions = new CollisionHandler();
 
 Spaceship main;
 private int score = 0;
+private int highScore = 0;
 
 ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 private int bulletCountdown = 0;
@@ -196,7 +197,7 @@ void keyPressed(){
       bulletCountdown = 150;
     }
   }
-  if ((key == 'b' || key == 'B') && !helpMode){
+  if ((key == 'b' || key == 'B') && !helpMode && main.isVisible()){
     //Hyperspace
     if(hyperspaceCountdown == 1200){
       main.setX( (int) (Math.random()*647-6) );
@@ -276,11 +277,16 @@ void drawIndicators(){
     //Draw game over text
     if(main.getLives()<0){
       textAlign(CENTER);
-      textSize(72);
       fill(255);
+      textSize(20);
+      if(score <= highScore)
+        text("High score: " + highScore, width/2, height/2-70);
+      else
+        text("New high score!", width/2, height/2-70);
+      textSize(72);
       text("GAME OVER", width/2, height/2);
       textSize(24);
-      text("Your score was " + score, width/2, height/2+34);
+      text("Your score was " + score + ".", width/2, height/2+34);
       textSize(30);
       text("Press R to restart.", width/2, height/2+40+34);
     }
@@ -322,7 +328,9 @@ void resetGame(){
     int[] mainX = {10, -10, -5, -10};
     int[] mainY = {0, -10, -0, 10};
     main = new Spaceship(mainX, mainY);
+
     numAsteroids = 6;
+    if(score > highScore) highScore = score;
     score = 0;
   } else {
     numAsteroids++;

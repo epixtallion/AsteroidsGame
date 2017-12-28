@@ -14,6 +14,8 @@ Spaceship main;
 ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 private int bulletCountdown = 0;
 
+private int hyperspaceCountdown = 1200;
+
 boolean debug = false;
 private final int TURN_SPEED = 4;
 private final float SPEED = 0.1;
@@ -89,6 +91,9 @@ public void draw()
 
   //Bullet countdown
   if(bulletCountdown > 0) bulletCountdown--;
+
+  //Hyperspace countdown
+  if(hyperspaceCountdown < 1200) hyperspaceCountdown++;
 
   //Draw lives + ammo indicator
   drawIndicators();
@@ -179,10 +184,13 @@ void keyPressed(){
   }
   if (key == 'b' || key == 'B'){
     //Hyperspace
-    main.setX( (int) (Math.random()*647-6) );
-    main.setY( (int) (Math.random()*485-4) );
-    main.setDirectionX(0);
-    main.setDirectionY(0);
+    if(hyperspaceCountdown == 1200){
+      main.setX( (int) (Math.random()*647-6) );
+      main.setY( (int) (Math.random()*485-4) );
+      main.setDirectionX(0);
+      main.setDirectionY(0);
+      hyperspaceCountdown = 0;
+    }
   }
   if ((main.getLives() < 0 || asteroids.size() == 0) && key == 'r' || key == 'R')
     resetGame();
@@ -216,6 +224,15 @@ void drawIndicators(){
   noStroke();
   fill(111, 219, 161);
   rect(width-21, 61, -5*main.getBullets(), 13);
+
+  //Draw hyperspace indicator
+  fill(230);
+  stroke(1);
+  rect(width-20, 80, -100, 15);
+  noStroke();
+  if(hyperspaceCountdown == 1200) fill(111, 161, 219);
+  else fill(55, 80, 90);
+  rect(width-21, 81, hyperspaceCountdown/-12, 13);
 
   //Draw invulnerability text
   textAlign(RIGHT);
@@ -260,6 +277,8 @@ void resetGame(){
     main.setInvulnerability();
     main.setX(width/2);
     main.setY(height/2);
+    main.setDirectionX(0);
+    main.setDirectionY(0);
   }
 
   //Initialize stars

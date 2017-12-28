@@ -106,7 +106,7 @@ public void draw()
   drawIndicators();
 
   //Debug
-  if (debug){
+  if (debug && !helpMode && main.getLives() >= 0){
     fill(255);
     textSize(20);
     textAlign(LEFT);

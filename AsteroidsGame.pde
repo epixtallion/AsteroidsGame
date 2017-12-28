@@ -10,6 +10,7 @@ private int numAsteroids = 6;
 private final CollisionHandler collisions = new CollisionHandler();
 
 Spaceship main;
+private int score = 0;
 
 ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 private int bulletCountdown = 0;
@@ -102,6 +103,7 @@ public void draw()
   if (debug){
     fill(255);
     textSize(20);
+    textAlign(LEFT);
     String pointDirDebug = "Point direction: "+ main.getPointDirection();
     text(pointDirDebug, 10, 20);
     text("Keys pressed: " + key, 10, 40);
@@ -137,9 +139,15 @@ void collisionCheck(){
 
   for(int i = 0; i < asteroids.size(); i++){
     //Check each bullet for collisions
+
     for(int b = 0; b < bullets.size(); b++){
       //Break apart asteroid if hit by bullet
-      if(collisions.shapesCollide(asteroids.get(i), bullets.get(b))){
+      if(collisions.shapesCollide(asteroids.get(i), bullets.get(b)) &&
+        asteroids.get(i).getSize() > 0){
+
+        //Add score
+        score+=(Math.sqrt(Math.pow(main.getX() - asteroids.get(i).getX(), 2)
+          + Math.pow(main.getY() - asteroids.get(i).getY(), 2))/(6*asteroids.get(i).getSize())+2);
         //Remove bullet
         bullets.remove(b);
 
@@ -217,22 +225,30 @@ void drawIndicators(){
     popMatrix();
   }
 
-  //Draw ammo indicator
-  fill(230);
-  stroke(1);
-  rect(width-20, 60, -5*main.getMaxBullets(), 15);
-  noStroke();
-  fill(111, 219, 161);
-  rect(width-21, 61, -5*main.getBullets(), 13);
+  if(main.getLives() >= 0){
+    //Draw ammo indicator
+    fill(230);
+    stroke(1);
+    rect(width-20, 60, -5*main.getMaxBullets(), 15);
+    noStroke();
+    fill(111, 219, 161);
+    rect(width-21, 61, -5*main.getBullets(), 13);
 
-  //Draw hyperspace indicator
-  fill(230);
-  stroke(1);
-  rect(width-20, 80, -100, 15);
-  noStroke();
-  if(hyperspaceCountdown == 1200) fill(111, 161, 219);
-  else fill(55, 80, 90);
-  rect(width-21, 81, hyperspaceCountdown/-12, 13);
+    //Draw hyperspace indicator
+    fill(230);
+    stroke(1);
+    rect(width-20, 80, -100, 15);
+    noStroke();
+    if(hyperspaceCountdown == 1200) fill(111, 161, 219);
+    else fill(55, 80, 90);
+    rect(width-21, 81, hyperspaceCountdown/-12, 13);
+
+    //Draw score text
+    fill(255);
+    textSize(20);
+    textAlign(RIGHT);
+    text("SCORE: " + score, width-20, 120);
+  }
 
   //Draw invulnerability text
   textAlign(RIGHT);
@@ -247,8 +263,10 @@ void drawIndicators(){
     textSize(72);
     fill(255);
     text("GAME OVER", width/2, height/2);
+    textSize(24);
+    text("Your score was " + score, width/2, height/2+34);
     textSize(30);
-    text("Press R to restart.", width/2, height/2+40);
+    text("Press R to restart.", width/2, height/2+40+34);
   }
   if(asteroids.size() == 0){
     textAlign(CENTER);
@@ -270,6 +288,7 @@ void resetGame(){
     int[] mainY = {0, -10, -0, 10};
     main = new Spaceship(mainX, mainY);
     numAsteroids = 6;
+    score = 0;
   } else {
     numAsteroids++;
     main.addMaxBullets(5);

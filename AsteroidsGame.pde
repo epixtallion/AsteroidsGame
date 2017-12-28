@@ -207,7 +207,7 @@ void keyPressed(){
       hyperspaceCountdown = 0;
     }
   }
-  if ((main.getLives() < 0 || asteroids.size() == 0) && key == 'r' || key == 'R')
+  if (key == 'r' || key == 'R' && (main.getLives() < 0 || asteroids.size() == 0) && !helpMode)
     resetGame();
 }
 void drawIndicators(){

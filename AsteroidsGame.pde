@@ -185,7 +185,7 @@ void collisionCheck(){
 }
 
 void keyPressed(){
-  if (key == 'q' || key == 'Q') debug = !debug;
+  if ((key == 'q' || key == 'Q') && !helpMode) debug = !debug;
   if (key == 'h' || key == 'H') helpMode = !helpMode;
   if (key == ' ' && main.isVisible() && bulletCountdown == 0 && !helpMode){
     if(main.getBullets() > 0){
@@ -196,7 +196,7 @@ void keyPressed(){
       bulletCountdown = 150;
     }
   }
-  if (key == 'b' || key == 'B' && !helpMode){
+  if ((key == 'b' || key == 'B') && !helpMode){
     //Hyperspace
     if(hyperspaceCountdown == 1200){
       main.setX( (int) (Math.random()*647-6) );
@@ -299,7 +299,8 @@ void drawIndicators(){
     textAlign(CENTER);
     textSize(25);
     fill(255);
-    text("Use WASD to move, spacebar to shoot", width/2, height/5+17);
+    text("Use WASD to move, spacebar to shoot,", width/2, height/5-17);
+    text("B for hyperspace (Hyperspace cooldown is in blue)", width/2, height/5+17);
 
     text("Get more points for shooting smaller,", width/2, height/5*2-17);
     text("more far away asteroids", width/2, height/5*2+17);
@@ -307,7 +308,8 @@ void drawIndicators(){
     text("Clearing all the asteroids gives one more life", width/2, height/5*3-17);
     text("and 5 more bullets, and the map gets harder", width/2, height/5*3+17);
 
-    text("Using all your bullets needs 2.5 seconds to reload", width/2, height/5*4-17);
+    text("Using all your bullets needs 2.5 seconds to reload.", width/2, height/5*4-17);
+    text("Your ammo is indicated by the green bar.", width/2, height/5*4+17);
   }
 }
 void resetGame(){
